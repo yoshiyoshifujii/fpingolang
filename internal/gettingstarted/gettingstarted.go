@@ -24,3 +24,13 @@ func goFunc(n, acc int) int {
 func Factorial(n int) int {
 	return goFunc(n, 1)
 }
+
+func Factorial2(n int) int {
+	acc := 1
+	i := n
+	for i > 0 {
+		acc *= i
+		i = i - 1
+	}
+	return acc
+}

@@ -49,3 +49,22 @@ func Test_FactorialProperties(t *testing.T) {
 
 	properties.TestingRun(t)
 }
+
+func Test_Factorial2(t *testing.T) {
+	params := gopter.DefaultTestParameters()
+	params.MinSuccessfulTests = 100
+	properties := gopter.NewProperties(params)
+
+	properties.Property("Factorial(n) matches the product 1..n", prop.ForAll(
+		func(n int) bool {
+			expected := 1
+			for i := 1; i <= n; i++ {
+				expected *= i
+			}
+			return Factorial2(n) == expected
+		},
+		gen.IntRange(0, 10),
+	))
+
+	properties.TestingRun(t)
+}
