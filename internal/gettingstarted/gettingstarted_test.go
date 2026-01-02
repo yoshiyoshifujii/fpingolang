@@ -2,10 +2,8 @@ package gettingstarted
 
 import (
 	"testing"
+	"yoshiyoshifujii/fpingolang/internal/common"
 
-	"github.com/leanovate/gopter"
-	"github.com/leanovate/gopter/gen"
-	"github.com/leanovate/gopter/prop"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -32,39 +30,27 @@ func Test_Factorial(t *testing.T) {
 }
 
 func Test_FactorialProperties(t *testing.T) {
-	params := gopter.DefaultTestParameters()
-	params.MinSuccessfulTests = 100
-	properties := gopter.NewProperties(params)
-
-	properties.Property("Factorial(n) matches the product 1..n", prop.ForAll(
-		func(n int) bool {
-			expected := 1
-			for i := 1; i <= n; i++ {
-				expected *= i
-			}
-			return Factorial(n) == expected
-		},
-		gen.IntRange(0, 10),
-	))
-
-	properties.TestingRun(t)
+	for n := 0; n <= 10; n++ {
+		expected := 1
+		for i := 1; i <= n; i++ {
+			expected *= i
+		}
+		assert.Equal(t, expected, Factorial(n))
+	}
 }
 
 func Test_Factorial2(t *testing.T) {
-	params := gopter.DefaultTestParameters()
-	params.MinSuccessfulTests = 100
-	properties := gopter.NewProperties(params)
+	for n := 0; n <= 10; n++ {
+		expected := 1
+		for i := 1; i <= n; i++ {
+			expected *= i
+		}
+		assert.Equal(t, expected, Factorial2(n))
+	}
+}
 
-	properties.Property("Factorial(n) matches the product 1..n", prop.ForAll(
-		func(n int) bool {
-			expected := 1
-			for i := 1; i <= n; i++ {
-				expected *= i
-			}
-			return Factorial2(n) == expected
-		},
-		gen.IntRange(0, 10),
-	))
-
-	properties.TestingRun(t)
+func Test_Fib(t *testing.T) {
+	for i, expected := range common.TheFirst21FibonacciNumbers {
+		assert.Equal(t, expected, Fib(i))
+	}
 }

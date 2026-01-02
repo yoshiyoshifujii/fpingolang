@@ -40,3 +40,14 @@ func Factorial2(n int) int {
 // 0 and 1 are the first two numbers in the sequence,
 // so we start the accumulators with those.
 // At every iteration, we add the two numbers to get the next one.
+
+func goFuncForFib(n, current, next int) int {
+	if n <= 0 {
+		return current
+	}
+	return goFuncForFib(n-1, next, current+next)
+}
+
+func Fib(n int) int {
+	return goFuncForFib(n, 0, 1)
+}
