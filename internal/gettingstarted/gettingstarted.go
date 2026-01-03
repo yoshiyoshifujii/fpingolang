@@ -14,15 +14,15 @@ func FormatAbs(x int) string {
 	return fmt.Sprintf(msg, x, abs(x))
 }
 
-func goFunc(n, acc int) int {
+func goFactorial(n, acc int) int {
 	if n <= 0 {
 		return acc
 	}
-	return goFunc(n-1, n*acc)
+	return goFactorial(n-1, n*acc)
 }
 
 func Factorial(n int) int {
-	return goFunc(n, 1)
+	return goFactorial(n, 1)
 }
 
 func Factorial2(n int) int {
@@ -41,13 +41,13 @@ func Factorial2(n int) int {
 // so we start the accumulators with those.
 // At every iteration, we add the two numbers to get the next one.
 
-func goFuncForFib(n, current, next int) int {
+func goFib(n, current, next int) int {
 	if n <= 0 {
 		return current
 	}
-	return goFuncForFib(n-1, next, current+next)
+	return goFib(n-1, next, current+next)
 }
 
 func Fib(n int) int {
-	return goFuncForFib(n, 0, 1)
+	return goFib(n, 0, 1)
 }
