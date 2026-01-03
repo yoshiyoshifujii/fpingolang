@@ -78,3 +78,9 @@ func Uncurry[A, B, C any](f func(A) func(B) C) func(A, B) C {
 		return f(a)(b)
 	}
 }
+
+func Compose[A, B, C any](f func(B) C, g func(A) B) func(A) C {
+	return func(a A) C {
+		return f(g(a))
+	}
+}

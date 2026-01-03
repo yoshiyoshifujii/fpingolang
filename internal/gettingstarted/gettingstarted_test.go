@@ -123,3 +123,15 @@ func TestUncurry(t *testing.T) {
 		assert.Equal(t, expected, n*m)
 	})
 }
+
+func TestCompose(t *testing.T) {
+	common.PropSuiteTest(t, "Compose", testing2.GenProduct(testing2.GenInt, testing2.GenInt), func(p testing2.Pair[int, int]) {
+		n, m := p.First, p.Second
+		aToC := Compose[int, int, int](func(b int) int {
+			return n * b
+		}, func(a int) int {
+			return m * a
+		})
+		assert.Equal(t, aToC(1), n*m)
+	})
+}
