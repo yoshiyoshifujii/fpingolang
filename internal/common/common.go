@@ -1,6 +1,8 @@
 package common
 
-import "yoshiyoshifujii/fpingolang/internal/testing"
+import (
+	"yoshiyoshifujii/fpingolang/internal/testing"
+)
 
 var (
 	TheFirst21FibonacciNumbers = []int{0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765}
@@ -8,4 +10,20 @@ var (
 
 func GenLengthOfFibonacciSeq() testing.Gen[int] {
 	return testing.Choose(0, len(TheFirst21FibonacciNumbers))
+}
+
+func GenShortNumber() testing.Gen[int] {
+	return testing.Choose(0, 20)
+}
+
+func GenList[A any](g testing.Gen[A]) testing.Gen[[]A] {
+	return testing.FlatMap[int, []A](GenShortNumber(), func(n int) testing.Gen[[]A] {
+		return testing.Map[[]A, []A](testing.ListOfN[A](n, g), func(as []A) []A {
+			return as
+		})
+	})
+}
+
+func GenIntList() testing.Gen[[]int] {
+	return GenList[int](testing.GenInt)
 }

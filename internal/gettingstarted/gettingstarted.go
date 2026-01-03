@@ -51,3 +51,16 @@ func goFib(n, current, next int) int {
 func Fib(n int) int {
 	return goFib(n, 0, 1)
 }
+
+func goIsSorted[A any](as []A, gt func(A, A) bool, n int) bool {
+	if n >= len(as)-1 {
+		return true
+	} else if gt(as[n], as[n+1]) {
+		return false
+	}
+	return goIsSorted[A](as, gt, n+1)
+}
+
+func IsSorted[A any](as []A, gt func(A, A) bool) bool {
+	return goIsSorted(as, gt, 0)
+}

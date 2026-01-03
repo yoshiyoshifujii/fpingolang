@@ -38,3 +38,13 @@ func Map2[S, A, B, C any](st State[S, A], st2 State[S, B], f func(A, B) C) State
 		})
 	})
 }
+
+func Sequence[S, A any](actions []State[S, A]) State[S, []A] {
+	acc := Unit[S, []A](make([]A, 0, len(actions)))
+	for _, action := range actions {
+		acc = Map2[S, []A, A, []A](acc, action, func(vs []A, v A) []A {
+			return append(vs, v)
+		})
+	}
+	return acc
+}

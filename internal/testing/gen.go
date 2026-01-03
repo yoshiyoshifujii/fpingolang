@@ -14,6 +14,10 @@ func AsGen[A any](st state.State[state.RNG, A]) Gen[A] {
 	return Gen[A](st)
 }
 
+func GenUnit[A any](a A) Gen[A] {
+	return AsGen(state.Unit[state.RNG, A](a))
+}
+
 func NonNegativeInt() Gen[int] {
 	return AsGen(state.Apply[state.RNG, int](state.NonNegativeInt))
 }
@@ -38,6 +42,23 @@ func FlatMap[A, B any](self Gen[A], f func(a A) Gen[B]) Gen[B] {
 	}))
 }
 
+func Sequence[A any](actions []Gen[A]) Gen[[]A] {
+	var ss []state.State[state.RNG, A]
+	for _, action := range actions {
+		ss = append(ss, AsState(action))
+	}
+	return AsGen(state.Sequence[state.RNG, A](ss))
+}
+
+func ListOfN[A any](n int, g Gen[A]) Gen[[]A] {
+	var gs []Gen[A]
+	for i := 0; i < n; i++ {
+		gs = append(gs, g)
+	}
+	return Sequence[A](gs)
+}
+
 var (
-	SmallInt Gen[int] = Choose(-10, 10)
+	SmallInt = Choose(-10, 10)
+	GenInt   = AsGen(state.State[state.RNG, int](state.RandInt))
 )
