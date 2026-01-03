@@ -3,7 +3,7 @@ package testing
 import "yoshiyoshifujii/fpingolang/internal/state"
 
 type (
-	Gen[A any] state.State[state.RNG, A]
+	Gen[A any]     state.State[state.RNG, A]
 	Pair[A, B any] struct {
 		First  A
 		Second B
