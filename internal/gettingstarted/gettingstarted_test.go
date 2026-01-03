@@ -68,15 +68,15 @@ func genSortedArray() testing2.Gen[[]int] {
 
 func genUnsortedArray() testing2.Gen[[]int] {
 	return testing2.FlatMap[int, []int](testing2.Choose(2, 20), func(n int) testing2.Gen[[]int] {
-		return testing2.FlatMap(testing2.ListOfN(n, common.GenShortNumber()), func(list []int) testing2.Gen[[]int] {
-			var arr []int
-			for num, i := range list {
-				if i%2 == 0 {
-					arr = append(arr, num+100)
-				}
-				arr = append(arr, num-100)
-			}
-			return testing2.GenUnit(arr)
+		return testing2.FlatMap[int, []int](testing2.Choose(1, 21), func(a int) testing2.Gen[[]int] {
+			return testing2.FlatMap[int, []int](testing2.Choose(0, a), func(b int) testing2.Gen[[]int] {
+				return testing2.FlatMap(testing2.ListOfN(n-2, common.GenShortNumber()), func(rest []int) testing2.Gen[[]int] {
+					arr := make([]int, 0, n)
+					arr = append(arr, a, b)
+					arr = append(arr, rest...)
+					return testing2.GenUnit(arr)
+				})
+			})
 		})
 	})
 }
@@ -93,5 +93,33 @@ func TestIsSorted(t *testing.T) {
 			return i > i2
 		})
 		assert.False(t, actual)
+	})
+}
+
+func TestCurry(t *testing.T) {
+	mulCurry := func(a int) func(int) int {
+		return Curry[int, int, int](func(a1, b1 int) int {
+			return a1 * b1
+		})(a)
+	}
+	common.PropSuiteTest(t, "Curry", testing2.GenProduct(testing2.GenInt, testing2.GenInt), func(p testing2.Pair[int, int]) {
+		n, m := p.First, p.Second
+		expected := mulCurry(n)(m)
+		assert.Equal(t, expected, n*m)
+	})
+}
+
+func TestUncurry(t *testing.T) {
+	mulUncurry := func(a, b int) int {
+		return Uncurry[int, int, int](func(a1 int) func(int) int {
+			return func(b1 int) int {
+				return a1 * b1
+			}
+		})(a, b)
+	}
+	common.PropSuiteTest(t, "Uncurry", testing2.GenProduct(testing2.GenInt, testing2.GenInt), func(p testing2.Pair[int, int]) {
+		n, m := p.First, p.Second
+		expected := mulUncurry(n, m)
+		assert.Equal(t, expected, n*m)
 	})
 }

@@ -64,3 +64,17 @@ func goIsSorted[A any](as []A, gt func(A, A) bool, n int) bool {
 func IsSorted[A any](as []A, gt func(A, A) bool) bool {
 	return goIsSorted(as, gt, 0)
 }
+
+func Curry[A, B, C any](f func(A, B) C) func(A) func(B) C {
+	return func(a A) func(B) C {
+		return func(b B) C {
+			return f(a, b)
+		}
+	}
+}
+
+func Uncurry[A, B, C any](f func(A) func(B) C) func(A, B) C {
+	return func(a A, b B) C {
+		return f(a)(b)
+	}
+}

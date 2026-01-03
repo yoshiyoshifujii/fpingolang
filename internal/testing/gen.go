@@ -4,6 +4,10 @@ import "yoshiyoshifujii/fpingolang/internal/state"
 
 type (
 	Gen[A any] state.State[state.RNG, A]
+	Pair[A, B any] struct {
+		First  A
+		Second B
+	}
 )
 
 func AsState[A any](g Gen[A]) state.State[state.RNG, A] {
@@ -56,6 +60,12 @@ func ListOfN[A any](n int, g Gen[A]) Gen[[]A] {
 		gs = append(gs, g)
 	}
 	return Sequence[A](gs)
+}
+
+func GenProduct[A, B any](ga Gen[A], gb Gen[B]) Gen[Pair[A, B]] {
+	return Map2[A, B, Pair[A, B]](ga, gb, func(a A, b B) Pair[A, B] {
+		return Pair[A, B]{First: a, Second: b}
+	})
 }
 
 var (
