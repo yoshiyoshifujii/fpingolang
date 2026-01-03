@@ -14,6 +14,10 @@ func Unit[S, A any](a A) State[S, A] {
 	}
 }
 
+func Run[S, A any](st State[S, A], s S) (A, S) {
+	return st(s)
+}
+
 func FlatMap[S, A, B any](st State[S, A], f func(A) State[S, B]) State[S, B] {
 	return func(s S) (B, S) {
 		a, s1 := st(s)

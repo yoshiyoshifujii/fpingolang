@@ -16,6 +16,10 @@ const (
 	mask       uint64 = (1 << 48) - 1 // 0xFFFFFFFFFFFF
 )
 
+func NewRNGSimple(seed uint64) RNG {
+	return &RNGSimple{seed: seed}
+}
+
 func (r RNGSimple) NextInt() (int, RNG) {
 	newSeed := (r.seed*multiplier + addend) & mask
 	nextRNG := RNGSimple{seed: newSeed}
