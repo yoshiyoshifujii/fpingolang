@@ -8,6 +8,10 @@ type (
 		First  A
 		Second B
 	}
+	Pair3[A, B, C any] struct {
+		First  Pair[A, B]
+		Second C
+	}
 )
 
 func AsState[A any](g Gen[A]) state.State[state.RNG, A] {
@@ -68,7 +72,20 @@ func GenProduct[A, B any](ga Gen[A], gb Gen[B]) Gen[Pair[A, B]] {
 	})
 }
 
+func GenProduct3[A, B, C any](ga Gen[A], gb Gen[B], gc Gen[C]) Gen[Pair3[A, B, C]] {
+	gab := Map2[A, B, Pair[A, B]](ga, gb, func(a A, b B) Pair[A, B] {
+		return Pair[A, B]{First: a, Second: b}
+	})
+	return Map2[Pair[A, B], C, Pair3[A, B, C]](gab, gc, func(p Pair[A, B], c C) Pair3[A, B, C] {
+		return Pair3[A, B, C]{
+			First:  p,
+			Second: c,
+		}
+	})
+}
+
 var (
-	SmallInt = Choose(-10, 10)
-	GenInt   = AsGen(state.State[state.RNG, int](state.RandInt))
+	SmallInt   = Choose(-10, 10)
+	GenInt     = AsGen(state.State[state.RNG, int](state.RandInt))
+	GenBoolean = AsGen(state.RNGBoolean)
 )

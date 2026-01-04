@@ -34,3 +34,8 @@ func NonNegativeInt(rng RNG) (int, RNG) {
 	}
 	return i, r
 }
+
+func RNGBoolean(rng RNG) (bool, RNG) {
+	i, r := rng.NextInt()
+	return i%2 == 0, r
+}
