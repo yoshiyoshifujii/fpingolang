@@ -9,10 +9,10 @@ import (
 )
 
 var (
-	genParBoolean testing2.Gen[Par[bool]] = testing2.Map(testing2.GenBoolean, func(a bool) Par[bool] {
+	genParBoolean = testing2.Map(testing2.GenBoolean, func(a bool) Par[bool] {
 		return ParUnit(a)
 	})
-	genParInt testing2.Gen[Par[int]] = testing2.Map(common.GenShortNumber(), func(a int) Par[int] {
+	genParInt = testing2.Map(common.GenShortNumber(), func(a int) Par[int] {
 		return ParUnit(a)
 	})
 	es = GoExecutor{}
